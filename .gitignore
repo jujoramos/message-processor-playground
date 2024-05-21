@@ -1,0 +1,7 @@
+# Ignore Gradle and IDE project-specific directories
+.idea
+.gradle
+.DS_Store
+
+# Ignore Gradle build output directory
+build
