@@ -63,6 +63,7 @@ tasks.withType<SpotBugsTask> {
     tasks.getByName("assemble").dependsOn(this)
     excludeFilter = file("${configDirectory}/spotbugs-exclude.xml")
 }
+project.gradle.startParameter.excludedTaskNames.add("spotbugsTest")
 
 tasks.withType<SpotlessCheck> {
     tasks.getByName("assemble").dependsOn(this)

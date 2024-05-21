@@ -11,23 +11,23 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>): Unit = exitProcess(CommandLine(HelloWorld()).execute(*args))
 
 @Command(
-    name = "Hello World",
-    mixinStandardHelpOptions = true,
-    version = ["1.0"],
-    description = ["Say hello"]
+	name = "Hello World",
+	mixinStandardHelpOptions = true,
+	version = ["1.0"],
+	description = ["Say hello"],
 )
 class HelloWorld : Callable<Int> {
-    private companion object {
-        val logger: Logger = LoggerFactory.getLogger(this::class.java.enclosingClass)
-    }
+	private companion object {
+		val logger: Logger = LoggerFactory.getLogger(this::class.java.enclosingClass)
+	}
 
-    @Option(names = ["-n", "--name"], description = ["Say your name"])
-    var name = "World"
+	@Option(names = ["-n", "--name"], description = ["Say your name"])
+	var name = "World"
 
-    override fun call(): Int {
-        logger.info("Say hello to $name")
-        println("Hello $name")
+	override fun call(): Int {
+		logger.info("Say hello to $name")
+		println("Hello $name")
 
-        return 0
-    }
+		return 0
+	}
 }

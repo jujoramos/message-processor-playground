@@ -1,2 +1,11 @@
 <FindBugsFilter>
+    <!--
+        There are no incomplete messages.
+        Warning about not checking how many bytes were read from the buffer can be ignored
+    -->
+    <Match>
+        <Class name="com.logitech.service.impl.FixedBinarySizeProcessor"/>
+        <Method name="process"/>
+        <Bug pattern="RR_NOT_CHECKED"/>
+    </Match>
 </FindBugsFilter>
