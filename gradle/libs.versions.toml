@@ -9,11 +9,15 @@ spotless-gradle-plugin = "6.25.0"
 foojay-resolver-convention-plugin = "0.8.0"
 
 # Testing
-log4j = "2.23.1"
 junit = "5.10.2"
 assertj = "3.25.3"
 mockito = "5.12.0"
 mockito-kotlin = "5.3.1"
+
+# Other
+log4j = "2.23.1"
+picocli = "4.7.5"
+
 
 [libraries]
 # Plugins
@@ -22,12 +26,13 @@ spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradl
 spotbugs-gradle-plugin = { module = "com.github.spotbugs.snom:spotbugs-gradle-plugin", version.ref = "spotbugs-gradle-plugin" }
 
 # Actual Libraries
+picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref = "assertj" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+log4j-slf4j = { group = "org.apache.logging.log4j", name = "log4j-slf4j-impl", version.ref = "log4j" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
-log4j-slf4j2 = { group = "org.apache.logging.log4j", name = "log4j-slf4j2-impl", version.ref = "log4j" }
 
 [bundles]
-logging = ["log4j-slf4j2"]
+logging = ["log4j-slf4j"]
 testing = ["junit-jupiter", "assertj-core", "mockito-core", "mockito-kotlin"]
