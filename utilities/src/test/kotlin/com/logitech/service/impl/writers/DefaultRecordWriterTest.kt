@@ -1,0 +1,20 @@
+package com.logitech.service.impl.writers
+
+import com.logitech.model.Record
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import java.io.ByteArrayOutputStream
+
+class DefaultRecordWriterTest {
+	@Test
+	fun shouldCorrectlyWriteRecordToOutputStream() {
+		val outputStream = ByteArrayOutputStream()
+		val recordWriter = DefaultRecordWriter(outputStream)
+		val record = Record(1, "testOutput")
+
+		recordWriter.write(record)
+
+		val expectedOutput = "----------- 1 -----------\ntestOutput\n"
+		assertThat(outputStream.toString()).isEqualTo(expectedOutput)
+	}
+}

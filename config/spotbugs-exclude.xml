@@ -4,8 +4,16 @@
         Warning about not checking how many bytes were read from the buffer can be ignored
     -->
     <Match>
-        <Class name="com.logitech.service.impl.FixedBinarySizeProcessor"/>
-        <Method name="process"/>
+        <Class name="com.logitech.service.impl.readers.DefaultRecordReader"/>
+        <Method name="read"/>
         <Bug pattern="RR_NOT_CHECKED"/>
+    </Match>
+
+    <!--
+        No need for defensive copy of the construction parameters.
+    -->
+    <Match>
+        <Class name="com.logitech.service.impl.DefaultInputProcessor"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
 </FindBugsFilter>

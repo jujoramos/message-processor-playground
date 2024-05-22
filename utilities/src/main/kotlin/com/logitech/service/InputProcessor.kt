@@ -1,19 +1,15 @@
 package com.logitech.service
 
-import java.io.InputStreamReader
+import java.io.InputStream
 
 /**
- * Interface for processing input data.
+ * Interface for processing input streams.
  */
 interface InputProcessor {
 	/**
-	 * Processes input data from an [InputStreamReader] and transforms it using the configured [RecordTransformer].
+	 * Processes the given input stream, reading and writing records one by one.
 	 *
-	 * @param reader The InputStreamReader to read the input data from.
-	 * @param transformer The RecordTransformer to use for transforming the input data.
+	 * @param inputStream The [InputStream] to process.
 	 */
-	fun process(
-		reader: InputStreamReader,
-		transformer: RecordTransformer,
-	)
+	fun process(inputStream: InputStream)
 }
