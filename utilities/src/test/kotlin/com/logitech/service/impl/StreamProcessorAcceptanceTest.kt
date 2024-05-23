@@ -23,6 +23,7 @@ class StreamProcessorAcceptanceTest {
 			}
 		}
 
+	private val inputFile = "src/test/resources/logi.bin"
 	private val record0 = Record(0, "Hello, welcome to Logitech!")
 	private val record1 =
 		Record(
@@ -39,7 +40,7 @@ class StreamProcessorAcceptanceTest {
 
 	@Test
 	fun recordsFromSampleFileAreCorrectlyProcessedByTheDefaultRecordReader() {
-		File("src/test/resources/logi.bin").also {
+		File(inputFile).also {
 			StreamProcessor().process(
 				DefaultRecordReader(it.inputStream(), PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE),
 				delegatingRecordingRecordWriter,
@@ -54,7 +55,7 @@ class StreamProcessorAcceptanceTest {
 
 	@Test
 	fun recordsFromSampleFileAreCorrectlyProcessedByTheErrorTolerantRecordReader() {
-		File("src/test/resources/logi.bin").also {
+		File(inputFile).also {
 			StreamProcessor().process(
 				ErrorTolerantRecordReader(it, PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE),
 				delegatingRecordingRecordWriter,

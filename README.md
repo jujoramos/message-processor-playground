@@ -77,6 +77,9 @@ Once the solution has been built and the distribution installed, it can be execu
 
 ```shell
 ./app/build/distributions/app-1.0.0/bin/app
+```
+
+```shell
 Usage:
 
 app [-hV] [COMMAND]
@@ -107,6 +110,9 @@ through the [log4j2.xml](app/src/main/resources/log4j2.xml)
 
 ```shell
 ./app/build/distributions/app-1.0.0/bin/app process --help
+```
+
+```shell
 Usage:
 
 app process [-hV] -f=<file> [-p=<processorName>] [-r=<readerName>] [-w=<writerName>]
@@ -143,3 +149,9 @@ summary of what does it do:
 | `<readerName>`    | [ErrorTolerantRecordReader](utilities/src/main/kotlin/com/logitech/service/impl/readers/ErrorTolerantRecordReader.kt) | The default reader implementation, will try to process the whole input even if there are errors while parsing a record              | 
 | `<writerName>`    | [DefaultRecordWriter](utilities/src/main/kotlin/com/logitech/service/impl/writers/DefaultRecordWriter.kt)             | The default writer implementation, it simply outputs the record (sequence number and message) to standard output                    | 
 | `<processorName>` | [StreamProcessor](utilities/src/main/kotlin/com/logitech/service/impl/StreamProcessor.kt)                             | The default processor implementation, it process the input file using a stream approach (read and write every record one at a time) | 
+
+To execute the application against the original `logi.bin` file:
+
+```shell
+./app/build/distributions/app-1.0.0/bin/app process --file $(pwd)/utilities/src/test/resources/logi.bin
+```
