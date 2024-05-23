@@ -1,6 +1,6 @@
 package com.logitech.app
 
-import com.logitech.app.commands.ProcessInput
+import com.logitech.app.commands.ProcessInputCommand
 import picocli.CommandLine
 import kotlin.system.exitProcess
 
@@ -17,7 +17,7 @@ import kotlin.system.exitProcess
 	sortOptions = false,
 	usageHelpAutoWidth = true,
 	mixinStandardHelpOptions = true,
-	subcommands = [ProcessInput::class],
+	subcommands = [ProcessInputCommand::class],
 	description = ["Command Line Utilities for Performance Simulations."],
 )
 class CliApp : Runnable {
@@ -30,5 +30,8 @@ class CliApp : Runnable {
 }
 
 fun main(args: Array<String>) {
-	exitProcess(CommandLine(CliApp()).execute(*args))
+	val commandLine = CommandLine(CliApp())
+	commandLine.executionExceptionHandler = ExceptionHandler()
+
+	exitProcess(commandLine.execute(*args))
 }

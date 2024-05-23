@@ -22,7 +22,7 @@ import java.util.concurrent.Callable
 		"Records are read and written using <readerName> and <writerName> respectively.",
 	],
 )
-class ProcessInput : Callable<Int> {
+class ProcessInputCommand : Callable<Int> {
 	private companion object {
 		val logger: Logger = LoggerFactory.getLogger(this::class.java.enclosingClass)
 	}
@@ -83,7 +83,7 @@ class ProcessInput : Callable<Int> {
 			val recordWriter =
 				when (writerName) {
 					DefaultRecordWriter::class.java.simpleName -> DefaultRecordWriter(System.out)
-					else -> throw IllegalArgumentException("Invalid RecordWriter type: $writerName")
+					else -> throw IllegalArgumentException("'$writerName' is not a valid writer type")
 				}
 
 			val recordReader =
@@ -102,13 +102,13 @@ class ProcessInput : Callable<Int> {
 							Defaults.SEQUENCE_NUMBER_SIZE,
 						)
 
-					else -> throw IllegalArgumentException("Invalid RecordReader type: $readerName")
+					else -> throw IllegalArgumentException("'$readerName' is not a valid reader type")
 				}
 
 			val processor =
 				when (processorName) {
 					StreamProcessor::class.java.simpleName -> StreamProcessor()
-					else -> throw IllegalArgumentException("Invalid StreamProcessor type: $processorName")
+					else -> throw IllegalArgumentException("'$processorName' is not a valid processor type")
 				}
 
 			processor.process(recordReader, recordWriter)
