@@ -2,6 +2,8 @@ package com.logitech.service.impl.readers
 
 import com.logitech.model.Record
 import com.logitech.service.RecordReader
+import com.logitech.utils.debug
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.EOFException
 import java.io.File
@@ -29,9 +31,12 @@ class ErrorTolerantRecordReader(
 	private val payloadSize: Int,
 	private val sequenceNumberSize: Int,
 ) : RecordReader {
+	private companion object {
+		val logger: Logger = LoggerFactory.getLogger(this::class.java.enclosingClass)
+	}
+
 	private var next: Record? = null
 	private val file = RandomAccessFile(file, "r")
-	private val logger = LoggerFactory.getLogger(ErrorTolerantRecordReader::class.java)
 
 	init {
 		loadNextRecord()
@@ -45,9 +50,12 @@ class ErrorTolerantRecordReader(
 	 * itself recursively to try to load the next record.
 	 */
 	private fun loadNextRecord() {
+		logger.debug { "Loading next record" }
+
 		// No more records to read
 		if (file.length() - file.filePointer < payloadSize) {
 			next = null
+			logger.debug { "End of file reached at offset ${file.filePointer}" }
 			return
 		}
 
@@ -57,6 +65,7 @@ class ErrorTolerantRecordReader(
 		val payload = ByteBuffer.wrap(payloadSizeBuffer).order(ByteOrder.LITTLE_ENDIAN).int
 		require(payload > 0) { "Invalid payload header: $payload" }
 		val lastSuccessPosition = file.filePointer
+		logger.debug { "Payload successfully retrieved at offset ${file.filePointer}: $payload" }
 
 		// Within the try-catch block so failures upon reading the sequence number and message can be handled gracefully.
 		try {
@@ -64,12 +73,15 @@ class ErrorTolerantRecordReader(
 			file.readFully(sequenceNumberBuffer)
 			val sequenceNumber = ByteBuffer.wrap(sequenceNumberBuffer).order(ByteOrder.LITTLE_ENDIAN).int
 			require(sequenceNumber >= 0) { "Invalid sequence number: $sequenceNumber" }
+			logger.debug { "Sequence number successfully retrieved at offset ${file.filePointer}: $sequenceNumber" }
 
 			val messageBuffer = ByteArray(payload)
 			file.readFully(messageBuffer)
 			next = Record(sequenceNumber, String(messageBuffer, StandardCharsets.UTF_8))
+			logger.debug { "Record successfully retrieved at offset ${file.filePointer}: $next" }
 		} catch (e: EOFException) {
 			// Ignore, no more records to read
+			logger.debug { "End of file reached at offset ${file.filePointer}" }
 			next = null
 		} catch (e: Exception) {
 			// If an error occurs, skip to the next record
