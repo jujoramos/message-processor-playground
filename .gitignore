@@ -3,5 +3,6 @@
 .gradle
 .DS_Store
 
-# Ignore Gradle build output directory
+# Ignore output directories
+logs
 build

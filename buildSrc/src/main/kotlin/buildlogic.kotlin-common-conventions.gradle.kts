@@ -55,7 +55,6 @@ spotless {
 tasks.named<Test>("test") {
     useJUnitPlatform()
     outputs.upToDateWhen { false }
-    testLogging.showStandardStreams = true
 }
 
 val configDirectory = "${rootDir}/config"

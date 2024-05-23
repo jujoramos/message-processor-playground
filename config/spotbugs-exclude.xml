@@ -16,4 +16,12 @@
         <Class name="com.logitech.service.impl.DefaultProcessor"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
+
+    <!--
+        This is how the framework works, no need for defensive copy or hide internal representation.
+    -->
+    <Match>
+        <Class name="com.logitech.app.CliApp"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
 </FindBugsFilter>
