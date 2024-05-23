@@ -47,7 +47,6 @@ added without breaking backward compatibility.
 TLDR;
 
 ```shell
-```shell
 ./gradlew clean test run --args="process --file $(pwd)/utilities/src/test/resources/logi.bin"
 ```
 
