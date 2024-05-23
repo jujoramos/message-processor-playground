@@ -9,21 +9,23 @@ import java.nio.ByteOrder.LITTLE_ENDIAN
 import java.nio.charset.StandardCharsets
 
 /**
- * Implementation of the [RecordReader] interface for reading [Record] objects.
+ * Implementation of the [RecordReader] interface for reading [Record] objects from an [InputStream].
+ * The implementation is not tolerant to errors, so any failures while processing a record will result in the entire
+ * process being aborted.
  *
  * This class is not thread-safe and should not be shared between threads.
  *
  * @property inputStream Where to read objects from.
- * @property headerSize The size of the header in bytes.
+ * @property payloadSize The size of the payload in bytes.
  * @property sequenceNumberSize The size of the sequence number in bytes.
  *
  */
 class DefaultRecordReader(
 	inputStream: InputStream,
-	private val headerSize: Int,
+	private val payloadSize: Int,
 	private val sequenceNumberSize: Int,
 ) : RecordReader {
-	private val metadataSize = headerSize + sequenceNumberSize
+	private val metadataSize = payloadSize + sequenceNumberSize
 	private val inputStreamReader = InputStreamReader(inputStream, StandardCharsets.UTF_8)
 
 	/**
@@ -35,15 +37,15 @@ class DefaultRecordReader(
 	 */
 	fun read(metadata: ByteArray): Record {
 		// TODO: handle errors more gracefully.
-		val payloadHeader = wrap(metadata, 0, headerSize).order(LITTLE_ENDIAN).int
-		require(payloadHeader > 0) { "Invalid payload header: $payloadHeader" }
+		val payload = wrap(metadata, 0, payloadSize).order(LITTLE_ENDIAN).int
+		require(payload > 0) { "Invalid payload header: $payload" }
 
 		// Read & validate sequence number
-		val sequenceNumber = wrap(metadata, headerSize, sequenceNumberSize).order(LITTLE_ENDIAN).int
+		val sequenceNumber = wrap(metadata, payloadSize, sequenceNumberSize).order(LITTLE_ENDIAN).int
 		require(sequenceNumber >= 0) { "Invalid sequence number: $sequenceNumber" }
 
 		// Read the actual message using the specified size
-		val messageBuffer = CharArray(payloadHeader)
+		val messageBuffer = CharArray(payload)
 		inputStreamReader.read(messageBuffer)
 
 		return Record(sequenceNumber, String(messageBuffer))

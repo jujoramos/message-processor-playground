@@ -3,6 +3,11 @@ package com.logitech.service
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
+object Defaults {
+	const val PAYLOAD_SIZE = 4
+	const val SEQUENCE_NUMBER_SIZE = 4
+}
+
 fun mockRecord(
 	payload: Int,
 	sequence: Int,

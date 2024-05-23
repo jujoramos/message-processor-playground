@@ -1,5 +1,7 @@
 package com.logitech.service.impl.readers
 
+import com.logitech.service.Defaults.PAYLOAD_SIZE
+import com.logitech.service.Defaults.SEQUENCE_NUMBER_SIZE
 import com.logitech.service.mockRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -9,14 +11,10 @@ import java.io.IOException
 import java.io.InputStream
 
 class DefaultRecordReaderTest {
-	private val payloadSize = 4
-	private val sequenceSize = 4
-
 	@Test
 	fun exceptionIsThrownWhenInvalidPayloadHeaderIsReceived() {
-		val record = mockRecord(-1, 1, "test", payloadSize, sequenceSize)
-		val inputStream = ByteArrayInputStream(record)
-		val recordReader = DefaultRecordReader(inputStream, payloadSize, sequenceSize)
+		val record = mockRecord(-1, 1, "test", PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE)
+		val recordReader = DefaultRecordReader(ByteArrayInputStream(record), PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE)
 
 		assertThatThrownBy {
 			recordReader.read(record)
@@ -26,9 +24,8 @@ class DefaultRecordReaderTest {
 
 	@Test
 	fun exceptionIsThrownWhenInvalidSequenceNumberIsReceived() {
-		val record = mockRecord(4, -1, "test", payloadSize, sequenceSize)
-		val inputStream = ByteArrayInputStream(record)
-		val recordReader = DefaultRecordReader(inputStream, payloadSize, sequenceSize)
+		val record = mockRecord(PAYLOAD_SIZE, -1, "test", PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE)
+		val recordReader = DefaultRecordReader(ByteArrayInputStream(record), PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE)
 
 		assertThatThrownBy {
 			recordReader.read(record)
@@ -45,7 +42,7 @@ class DefaultRecordReaderTest {
 				}
 			}
 
-		val recordReader = DefaultRecordReader(failingInputStream, payloadSize, sequenceSize)
+		val recordReader = DefaultRecordReader(failingInputStream, PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE)
 
 		assertThatThrownBy {
 			recordReader.iterator()
@@ -54,12 +51,11 @@ class DefaultRecordReaderTest {
 	}
 
 	@Test
-	fun iteratorWorksCorrectly() {
+	fun iterationWorksCorrectly() {
 		val records =
-			mockRecord("record1".length, 1, "record1", payloadSize, sequenceSize) +
-				mockRecord("anotherRecord".length, 2, "anotherRecord", payloadSize, sequenceSize)
-		val inputStream = ByteArrayInputStream(records)
-		val recordReader = DefaultRecordReader(inputStream, payloadSize, sequenceSize)
+			mockRecord("record1".length, 1, "record1", PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE) +
+				mockRecord("anotherRecord".length, 2, "anotherRecord", PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE)
+		val recordReader = DefaultRecordReader(ByteArrayInputStream(records), PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE)
 
 		val iterator = recordReader.iterator()
 		assertThat(iterator.hasNext()).isTrue()
