@@ -2,18 +2,14 @@ package com.logitech.service.impl.writers
 
 import com.logitech.model.Record
 import com.logitech.service.RecordWriter
-import java.io.OutputStream
-import java.io.OutputStreamWriter
-import java.nio.charset.StandardCharsets
+import java.io.Writer
 
 /**
- * Implementation of the [RecordWriter] interface for writing [Record] objects to an output stream.
+ * Implementation of the [RecordWriter] interface for writing [Record] objects through the configured [Writer].
  */
 class DefaultRecordWriter(
-	outputStream: OutputStream,
+	private val writer: Writer,
 ) : RecordWriter {
-	private val writer = OutputStreamWriter(outputStream, StandardCharsets.UTF_8)
-
 	/**
 	 * Writes the given record to the output stream.
 	 *

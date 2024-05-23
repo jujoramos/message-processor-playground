@@ -10,12 +10,13 @@ import com.logitech.service.impl.writers.DefaultRecordWriter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.io.OutputStreamWriter
 
 class StreamProcessorAcceptanceTest {
 	private val delegatingRecordingRecordWriter =
 		object : RecordWriter {
 			val records = mutableMapOf<Int, String>()
-			val defaultWriter = DefaultRecordWriter(System.out)
+			val defaultWriter = DefaultRecordWriter(OutputStreamWriter(System.out))
 
 			override fun write(record: Record) {
 				records[record.sequence] = record.message

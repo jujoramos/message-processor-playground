@@ -23,7 +23,7 @@ class ExceptionHandler : IExecutionExceptionHandler {
 	): Int {
 		logger.error("Error Executing Command '${commandLine.commandSpec.name()}': ${exception.message}", exception)
 		val errorMessage = Ansi.AUTO.string("@|bold,red ${exception.javaClass.name}: ${exception.message}|@")
-		commandLine.getErr().println(errorMessage)
+		commandLine.err.println(errorMessage)
 
 		return commandLine.exitCodeExceptionMapper?.getExitCode(exception)
 			?: commandLine.commandSpec.exitCodeOnExecutionException()

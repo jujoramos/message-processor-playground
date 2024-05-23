@@ -6,6 +6,7 @@ import com.logitech.service.impl.readers.ErrorTolerantRecordReader
 import com.logitech.service.impl.writers.DefaultRecordWriter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.io.File
@@ -32,6 +33,9 @@ class ProcessInputCommand : Callable<Int> {
 		const val PAYLOAD_SIZE = 4
 		const val SEQUENCE_NUMBER_SIZE = 4
 	}
+
+	@CommandLine.Spec
+	var commandSpec: CommandLine.Model.CommandSpec? = null
 
 	@Option(
 		required = true,
@@ -82,7 +86,7 @@ class ProcessInputCommand : Callable<Int> {
 
 			val recordWriter =
 				when (writerName) {
-					DefaultRecordWriter::class.java.simpleName -> DefaultRecordWriter(System.out)
+					DefaultRecordWriter::class.java.simpleName -> DefaultRecordWriter(commandSpec!!.commandLine().out)
 					else -> throw IllegalArgumentException("'$writerName' is not a valid writer type")
 				}
 
