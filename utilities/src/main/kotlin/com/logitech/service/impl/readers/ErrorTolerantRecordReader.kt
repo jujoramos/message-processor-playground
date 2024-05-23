@@ -38,10 +38,6 @@ class ErrorTolerantRecordReader(
 	private var next: Record? = null
 	private val file = RandomAccessFile(file, "r")
 
-	init {
-		loadNextRecord()
-	}
-
 	/**
 	 * Loads the next record from the file.
 	 *
@@ -100,12 +96,16 @@ class ErrorTolerantRecordReader(
 	override fun iterator(): Iterator<Record> {
 		return object : Iterator<Record> {
 			override fun hasNext(): Boolean {
+				if (next == null) {
+					loadNextRecord()
+				}
+
 				return next != null
 			}
 
 			override fun next(): Record {
 				val record = next ?: throw NoSuchElementException()
-				loadNextRecord()
+				next = null
 
 				return record
 			}

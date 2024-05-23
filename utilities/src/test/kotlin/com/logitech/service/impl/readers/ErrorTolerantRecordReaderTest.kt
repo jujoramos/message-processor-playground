@@ -20,9 +20,10 @@ class ErrorTolerantRecordReaderTest {
 		RandomAccessFile(file, "rw").use { raf ->
 			mockRecord(-1, 10, "invalidRecord", PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE).let { raf.write(it) }
 		}
+		val iterator = ErrorTolerantRecordReader(file, PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE).iterator()
 
 		assertThatThrownBy {
-			ErrorTolerantRecordReader(file, PAYLOAD_SIZE, SEQUENCE_NUMBER_SIZE)
+			iterator.hasNext()
 		}.isInstanceOf(IllegalArgumentException::class.java)
 			.hasMessage("Invalid payload header: -1")
 	}
