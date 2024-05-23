@@ -1,17 +1,15 @@
 package com.logitech.service
 
 import com.logitech.model.Record
-import java.io.InputStreamReader
 
 /**
- * Interface for reading records, one at a time.
+ * Interface for reading records.
  */
 interface RecordReader {
 	/**
-	 * Returns an iterator over the records in the input stream.
+	 * Returns an iterator over the available [Record] objects.
 	 *
-	 * @param streamReader The [InputStreamReader] to read objects from.
-	 * @return An [Iterator] over the records in the input stream.
+	 * @return An [Iterator] over the available [Record] objects.
 	 */
-	fun iterator(streamReader: InputStreamReader): Iterator<Record>
+	fun iterator(): Iterator<Record>
 }

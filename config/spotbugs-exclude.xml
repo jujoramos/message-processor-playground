@@ -13,7 +13,7 @@
         No need for defensive copy of the construction parameters.
     -->
     <Match>
-        <Class name="com.logitech.service.impl.DefaultInputProcessor"/>
+        <Class name="com.logitech.service.impl.DefaultProcessor"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
 </FindBugsFilter>

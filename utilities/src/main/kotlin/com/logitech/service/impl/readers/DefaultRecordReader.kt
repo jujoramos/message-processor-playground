@@ -2,36 +2,38 @@ package com.logitech.service.impl.readers
 
 import com.logitech.model.Record
 import com.logitech.service.RecordReader
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.ByteBuffer.wrap
 import java.nio.ByteOrder.LITTLE_ENDIAN
+import java.nio.charset.StandardCharsets
 
 /**
  * Implementation of the [RecordReader] interface for reading [Record] objects.
  *
- * This class is not thread safe (Iterators generally aren't thread safe), so it should not be shared between threads.
+ * This class is not thread-safe and should not be shared between threads.
  *
+ * @property inputStream Where to read objects from.
  * @property headerSize The size of the header in bytes.
  * @property sequenceNumberSize The size of the sequence number in bytes.
+ *
  */
 class DefaultRecordReader(
+	inputStream: InputStream,
 	private val headerSize: Int,
 	private val sequenceNumberSize: Int,
 ) : RecordReader {
 	private val metadataSize = headerSize + sequenceNumberSize
+	private val inputStreamReader = InputStreamReader(inputStream, StandardCharsets.UTF_8)
 
 	/**
 	 * Reads a [Record] from the given [metadata] and [InputStreamReader].
 	 *
 	 * @param metadata The metadata of the record, as a [ByteArray].
-	 * @param streamReader The [InputStreamReader] to read the record from.
 	 * @return The parsed [Record].
 	 * @throws IllegalArgumentException If the payload, or sequence, number is invalid.
 	 */
-	fun read(
-		metadata: ByteArray,
-		streamReader: InputStreamReader,
-	): Record {
+	fun read(metadata: ByteArray): Record {
 		// TODO: handle errors more gracefully.
 		val payloadHeader = wrap(metadata, 0, headerSize).order(LITTLE_ENDIAN).int
 		require(payloadHeader > 0) { "Invalid payload header: $payloadHeader" }
@@ -42,18 +44,17 @@ class DefaultRecordReader(
 
 		// Read the actual message using the specified size
 		val messageBuffer = CharArray(payloadHeader)
-		streamReader.read(messageBuffer)
+		inputStreamReader.read(messageBuffer)
 
 		return Record(sequenceNumber, String(messageBuffer))
 	}
 
 	/**
-	 * Returns an [Iterator] over the records in the given [InputStreamReader].
+	 * Returns an [Iterator] over the records in the internal [InputStreamReader].
 	 *
-	 * @param streamReader The [InputStreamReader] to read the records from.
-	 * @return An [Iterator] over the records in the [InputStreamReader].
+	 * @return An [Iterator] over the records in internal [InputStreamReader].
 	 */
-	override fun iterator(streamReader: InputStreamReader): Iterator<Record> {
+	override fun iterator(): Iterator<Record> {
 		return object : Iterator<Record> {
 			private var nextRecord: Record? = null
 			private val buffer = CharArray(metadataSize)
@@ -63,9 +64,9 @@ class DefaultRecordReader(
 			}
 
 			private fun loadNextRecord() {
-				if (streamReader.read(buffer) == metadataSize) {
+				if (inputStreamReader.read(buffer) == metadataSize) {
 					val byteArray = buffer.joinToString("").toByteArray()
-					nextRecord = read(byteArray, streamReader)
+					nextRecord = read(byteArray)
 				} else {
 					nextRecord = null
 				}

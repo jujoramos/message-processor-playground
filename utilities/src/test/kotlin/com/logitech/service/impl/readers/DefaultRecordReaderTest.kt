@@ -3,30 +3,23 @@ package com.logitech.service.impl.readers
 import com.logitech.service.mockRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 
 class DefaultRecordReaderTest {
 	private val payloadSize = 4
 	private val sequenceSize = 4
-	private lateinit var recordReader: DefaultRecordReader
-
-	@BeforeEach
-	fun setup() {
-		recordReader = DefaultRecordReader(payloadSize, sequenceSize)
-	}
 
 	@Test
 	fun exceptionIsThrownWhenInvalidPayloadHeaderIsReceived() {
 		val record = mockRecord(-1, 1, "test", payloadSize, sequenceSize)
-		val stream = ByteArrayInputStream(record)
+		val inputStream = ByteArrayInputStream(record)
+		val recordReader = DefaultRecordReader(inputStream, payloadSize, sequenceSize)
 
 		assertThatThrownBy {
-			recordReader.read(record, InputStreamReader(stream))
+			recordReader.read(record)
 		}.isInstanceOf(IllegalArgumentException::class.java)
 			.hasMessage("Invalid payload header: -1")
 	}
@@ -34,10 +27,11 @@ class DefaultRecordReaderTest {
 	@Test
 	fun exceptionIsThrownWhenInvalidSequenceNumberIsReceived() {
 		val record = mockRecord(4, -1, "test", payloadSize, sequenceSize)
-		val stream = ByteArrayInputStream(record)
+		val inputStream = ByteArrayInputStream(record)
+		val recordReader = DefaultRecordReader(inputStream, payloadSize, sequenceSize)
 
 		assertThatThrownBy {
-			recordReader.read(record, InputStreamReader(stream))
+			recordReader.read(record)
 		}.isInstanceOf(IllegalArgumentException::class.java)
 			.hasMessage("Invalid sequence number: -1")
 	}
@@ -51,8 +45,10 @@ class DefaultRecordReaderTest {
 				}
 			}
 
+		val recordReader = DefaultRecordReader(failingInputStream, payloadSize, sequenceSize)
+
 		assertThatThrownBy {
-			recordReader.iterator(InputStreamReader(failingInputStream))
+			recordReader.iterator()
 		}.isInstanceOf(IOException::class.java)
 			.hasMessage("Simulated read failure")
 	}
@@ -62,9 +58,10 @@ class DefaultRecordReaderTest {
 		val records =
 			mockRecord("record1".length, 1, "record1", payloadSize, sequenceSize) +
 				mockRecord("anotherRecord".length, 2, "anotherRecord", payloadSize, sequenceSize)
-		val stream = ByteArrayInputStream(records)
+		val inputStream = ByteArrayInputStream(records)
+		val recordReader = DefaultRecordReader(inputStream, payloadSize, sequenceSize)
 
-		val iterator = recordReader.iterator(InputStreamReader(stream))
+		val iterator = recordReader.iterator()
 		assertThat(iterator.hasNext()).isTrue()
 
 		val record1 = iterator.next()

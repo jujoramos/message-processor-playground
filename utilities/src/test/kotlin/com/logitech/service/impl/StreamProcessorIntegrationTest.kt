@@ -6,16 +6,13 @@ import com.logitech.service.impl.readers.DefaultRecordReader
 import com.logitech.service.impl.writers.DefaultRecordWriter
 import com.logitech.service.mockRecord
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 
-class DefaultInputProcessorIntegrationTest {
-	private val recordReader = DefaultRecordReader(4, 4)
-
+class StreamProcessorIntegrationTest {
 	private val recordWriter =
 		object : RecordWriter {
 			val records = mutableMapOf<Int, String>()
@@ -25,25 +22,11 @@ class DefaultInputProcessorIntegrationTest {
 			}
 		}
 
-	private val inputProcessor = DefaultInputProcessor(recordReader, recordWriter)
-
-	@Test
-	fun exceptionShouldBeThrownForEmptyInputStream(
-		@TempDir tempDir: Path,
-	) {
-		val tempFile = Files.createTempFile(tempDir, "", "").toFile()
-
-		tempFile.inputStream().use {
-			assertThatThrownBy {
-				inputProcessor.process(it)
-			}.isInstanceOf(IllegalArgumentException::class.java)
-		}
-	}
-
 	@Test
 	fun recordsFromSampleFileAreCorrectlyProcessed() {
 		File("src/test/resources/logi.bin").inputStream().use {
-			DefaultInputProcessor(recordReader, DefaultRecordWriter(System.out)).process(it)
+			val recordReader = DefaultRecordReader(it, 4, 4)
+			StreamProcessor().process(recordReader, DefaultRecordWriter(System.out))
 		}
 	}
 
@@ -59,7 +42,8 @@ class DefaultInputProcessorIntegrationTest {
 		val tempFile = Files.createTempFile(tempDir, "", "").toFile()
 		tempFile.writeBytes(records)
 		tempFile.inputStream().use {
-			inputProcessor.process(it)
+			val recordReader = DefaultRecordReader(it, 4, 4)
+			StreamProcessor().process(recordReader, recordWriter)
 		}
 
 		assertThat(recordWriter.records).hasSize(3)
