@@ -26,5 +26,5 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention")
 }
 
-rootProject.name = "logitech-message-transformer"
+rootProject.name = "message-processor-playground"
 include("app", "utilities")

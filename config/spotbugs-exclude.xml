@@ -4,7 +4,7 @@
         Warning about not checking how many bytes were read from the buffer can be ignored
     -->
     <Match>
-        <Class name="com.logitech.service.impl.readers.DefaultRecordReader"/>
+        <Class name="com.playground.service.impl.readers.DefaultRecordReader"/>
         <Method name="read"/>
         <Bug pattern="RR_NOT_CHECKED"/>
     </Match>
@@ -13,7 +13,7 @@
         No need for defensive copy of the construction parameters.
     -->
     <Match>
-        <Class name="com.logitech.service.impl.DefaultProcessor"/>
+        <Class name="com.playground.service.impl.DefaultProcessor"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
 
@@ -21,15 +21,15 @@
         This is how the framework works, no need for defensive copy or hide internal representation.
     -->
     <Match>
-        <Class name="com.logitech.app.CliApp"/>
+        <Class name="com.playground.app.CliApp"/>
         <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Class name="com.logitech.app.commands.ProcessInputCommand"/>
+        <Class name="com.playground.app.commands.ProcessInputCommand"/>
         <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Class name="com.logitech.service.impl.writers.DefaultRecordWriter"/>
+        <Class name="com.playground.service.impl.writers.DefaultRecordWriter"/>
         <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
     </Match>
 </FindBugsFilter>

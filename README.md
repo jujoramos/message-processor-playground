@@ -10,11 +10,12 @@
 
 # Overview
 
-"Innovation Team: Technical Test" exercise.
+Playground project to demonstrate the implementation of a simple command line application that processes records from a
+binary file.
 
 # Requirements
 
-The original requirements can be found in [requirements](requirements.pdf), below is a summary of the exercise:
+Below is a summary of the requirements:
 
 - Write an application that can a binary file given a pre-set format and extract all the messages including their
   sequence number.
@@ -143,12 +144,12 @@ Options:
 Below is the list of supported options for the different parameters, where the actual implementation can be found and a
 summary of what does it do:
 
-| Parameter         | Option                                                                                                                | Description                                                                                                                         |
-|-------------------|-----------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| `<readerName>`    | [DefaultRecordReader](utilities/src/main/kotlin/com/logitech/service/impl/readers/DefaultRecordReader.kt)             | First reader implementation, without any error handling (errors parsing a record halt the entire process)                           | 
-| `<readerName>`    | [ErrorTolerantRecordReader](utilities/src/main/kotlin/com/logitech/service/impl/readers/ErrorTolerantRecordReader.kt) | The default reader implementation, will try to process the whole input even if there are errors while parsing a record              | 
-| `<writerName>`    | [DefaultRecordWriter](utilities/src/main/kotlin/com/logitech/service/impl/writers/DefaultRecordWriter.kt)             | The default writer implementation, it simply outputs the record (sequence number and message) to standard output                    | 
-| `<processorName>` | [StreamProcessor](utilities/src/main/kotlin/com/logitech/service/impl/StreamProcessor.kt)                             | The default processor implementation, it process the input file using a stream approach (read and write every record one at a time) | 
+| Parameter         | Option                                                                                                                  | Description                                                                                                                         |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| `<readerName>`    | [DefaultRecordReader](utilities/src/main/kotlin/com/playground/service/impl/readers/DefaultRecordReader.kt)             | First reader implementation, without any error handling (errors parsing a record halt the entire process)                           | 
+| `<readerName>`    | [ErrorTolerantRecordReader](utilities/src/main/kotlin/com/playground/service/impl/readers/ErrorTolerantRecordReader.kt) | The default reader implementation, will try to process the whole input even if there are errors while parsing a record              | 
+| `<writerName>`    | [DefaultRecordWriter](utilities/src/main/kotlin/com/playground/service/impl/writers/DefaultRecordWriter.kt)             | The default writer implementation, it simply outputs the record (sequence number and message) to standard output                    | 
+| `<processorName>` | [StreamProcessor](utilities/src/main/kotlin/com/playground/service/impl/StreamProcessor.kt)                             | The default processor implementation, it process the input file using a stream approach (read and write every record one at a time) | 
 
 To execute the application against the original `logi.bin` file:
 

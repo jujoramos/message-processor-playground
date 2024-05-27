@@ -3,12 +3,12 @@ plugins {
 }
 
 version = "1.0.0"
-group = "com.logitech.app"
+group = "com.playground.app"
 
 dependencies {
     implementation(project(":utilities"))
 }
 
 application {
-    mainClass = "com.logitech.app.CliAppKt"
+    mainClass = "com.playground.app.CliAppKt"
 }
